@@ -1,10 +1,28 @@
 {
-  "scripts": {
-    "start": "node cli"
-  },
+  "name": "ghlint",
+  "version": "0.1.0",
+  "description": "A linter for GitHub projects.",
+  "main": "ghlint.js",
   "dependencies": {
     "bluebird": "^2.3.11",
     "request-promise": "^0.3.2",
     "underscore": "^1.7.0"
-  }
+  },
+  "scripts": {
+    "start": "node cli"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nicolasmccurdy/ghlint"
+  },
+  "keywords": [
+    "github",
+    "lint"
+  ],
+  "author": "Nicolas McCurdy <thenickperson@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nicolasmccurdy/ghlint/issues"
+  },
+  "homepage": "https://github.com/nicolasmccurdy/ghlint"
 }
