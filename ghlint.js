@@ -4,6 +4,7 @@ var request = require('request-promise');
 var repoURL = 'https://api.github.com/repos/nicolasmccurdy/repos';
 var options = {
   headers: {
+    Accept: 'application/vnd.github.v3',
     'User-Agent': 'ghlint'
   },
   qs: {
