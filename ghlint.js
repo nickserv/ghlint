@@ -6,6 +6,10 @@ var options = {
   headers: {
     'User-Agent': 'ghlint'
   },
+  qs: {
+    client_id: process.env.GHLINT_ID,
+    client_secret: process.env.GHLINT_SECRET
+  },
   url: repoURL
 }
 
