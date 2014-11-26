@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "node ghlint"
+    "start": "node cli"
   },
   "dependencies": {
     "bluebird": "^2.3.11",
