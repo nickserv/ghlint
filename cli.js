@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 var ghlint = require('./ghlint');
 
 ghlint.lintAll().each(function (linter) {

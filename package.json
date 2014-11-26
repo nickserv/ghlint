@@ -1,8 +1,11 @@
 {
   "name": "ghlint",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A linter for GitHub projects.",
   "main": "ghlint.js",
+  "bin" : {
+    "ghlint" : "cli.js"
+  },
   "dependencies": {
     "bluebird": "^2.3.11",
     "request-promise": "^0.3.2",
