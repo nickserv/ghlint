@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var Promise = require('bluebird');
 var request = require('request-promise');
 
 var repoURL = 'https://api.github.com/repos/nicolasmccurdy/repos';
@@ -63,10 +64,19 @@ var linters = [
       });
     }
   }
-]
+];
 
-linters.forEach(function (linter) {
-  linter.lint(repoURL).then(function (result) {
-    console.log(linter.message + ': ' + result);
-  }, console.error);
+function lintAll() {
+  return Promise.map(linters, function (linter) {
+    return linter.lint(repoURL).then(function (result) {
+      return {
+        message: linter.message,
+        result: result
+      };
+    });
+  });
+}
+
+lintAll().each(function (linter) {
+  console.log(linter.message + ': ' + linter.result);
 });

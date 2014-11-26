@@ -3,6 +3,7 @@
     "start": "node ghlint"
   },
   "dependencies": {
+    "bluebird": "^2.3.11",
     "request-promise": "^0.3.2",
     "underscore": "^1.7.0"
   }
