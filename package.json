@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "start": "node ghlint"
+  },
+  "dependencies": {
+    "request-promise": "^0.3.2"
+  }
+}
