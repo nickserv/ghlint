@@ -3,12 +3,12 @@
   "version": "0.2.0",
   "description": "A linter for GitHub projects.",
   "main": "index.js",
-  "bin" : {
-    "ghlint" : "cli.js"
+  "bin": {
+    "ghlint": "cli.js"
   },
   "dependencies": {
-    "bluebird": "^2.3.11",
-    "request-promise": "^0.3.2",
+    "async": "^0.9.0",
+    "request": "^2.48.0",
     "underscore": "^1.7.0"
   },
   "scripts": {

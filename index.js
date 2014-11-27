@@ -1,6 +1,6 @@
 var _ = require('underscore');
-var Promise = require('bluebird');
-var request = require('request-promise');
+var async = require('async');
+var request = require('request');
 
 var repoURL = 'https://api.github.com/repos/nicolasmccurdy/repos';
 var options = {
@@ -19,61 +19,61 @@ module.exports = {
   linters: [
     {
       message: 'has commits',
-      lint: function (repoURL) {
-        return request(_.extend(options, { url: repoURL + '/commits' })).then(function (body) {
-          return body.length > 0;
+      lint: function (repoURL, callback) {
+        request(_.extend(options, { url: repoURL + '/commits' }), function (err, body) {
+          callback(err, body.length > 0);
         });
       }
     },
     {
       message: 'has a lowercase name',
-      lint: function (repoURL) {
-        return request(options).then(function (body) {
-          return /^[a-z\-_]+$/.test(body.name);
+      lint: function (repoURL, callback) {
+        request(options, function (err, body) {
+          callback(err, /^[a-z\-_]+$/.test(body.name));
         });
       }
     },
     {
       message: 'has a description',
-      lint: function (repoURL) {
-        return request(options).then(function (body) {
-          return Boolean(body.full_name);
+      lint: function (repoURL, callback) {
+        request(options, function (err, body) {
+          callback(err, Boolean(body.full_name));
         });
       }
     },
     {
       message: 'default branch is master',
-      lint: function (repoURL) {
-        return request(options).then(function (body) {
-          return body.default_branch === 'master';
+      lint: function (repoURL, callback) {
+        request(options, function (err, body) {
+          callback(err, body.default_branch === 'master');
         });
       }
     },
     {
       message: 'has issues',
-      lint: function (repoURL) {
-        return request(options).then(function (body) {
-          return Boolean(body.has_issues);
+      lint: function (repoURL, callback) {
+        request(options, function (err, body) {
+          callback(err, Boolean(body.has_issues));
         });
       }
     },
     {
       message: 'has a homepage if it is using GitHub Pages',
-      lint: function (repoURL) {
-        return request(options).then(function (body) {
-          return body.has_pages ? Boolean(body.homepage) : true;
+      lint: function (repoURL, callback) {
+        request(options, function (err, body) {
+          callback(err, body.has_pages ? Boolean(body.homepage) : true);
         });
       }
     }
   ],
-  lintAll: function () {
-    return Promise.map(module.exports.linters, function (linter) {
-      return linter.lint(repoURL).then(function (result) {
-        return {
+  lintAll: function (callback) {
+    async.map(module.exports.linters, function (linter, mapCallback) {
+      linter.lint(repoURL, function (err, result) {
+        mapCallback(err, {
           message: linter.message,
           result: result
-        };
+        });
       });
-    });
+    }, callback);
   }
 };
