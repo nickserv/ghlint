@@ -13,67 +13,58 @@ var options = {
     client_secret: process.env.GHLINT_SECRET
   },
   url: repoURL
-}
+};
+var commitOptions = _.extend(options, { url: repoURL + '/commits' });
 
 module.exports = {
   linters: [
     {
       message: 'has commits',
-      lint: function (repoURL, callback) {
-        request(_.extend(options, { url: repoURL + '/commits' }), function (err, body) {
-          callback(err, body.length > 0);
-        });
+      lint: function (_, commits) {
+        return commits.length > 0;
       }
     },
     {
       message: 'has a lowercase name',
-      lint: function (repoURL, callback) {
-        request(options, function (err, body) {
-          callback(err, /^[a-z\-_]+$/.test(body.name));
-        });
+      lint: function (repo) {
+        return /^[a-z\-_]+$/.test(repo.name);
       }
     },
     {
       message: 'has a description',
-      lint: function (repoURL, callback) {
-        request(options, function (err, body) {
-          callback(err, Boolean(body.full_name));
-        });
+      lint: function (repo) {
+        return Boolean(repo.full_name);
       }
     },
     {
       message: 'default branch is master',
-      lint: function (repoURL, callback) {
-        request(options, function (err, body) {
-          callback(err, body.default_branch === 'master');
-        });
+      lint: function (repo) {
+        return repo.default_branch === 'master';
       }
     },
     {
       message: 'has issues',
-      lint: function (repoURL, callback) {
-        request(options, function (err, body) {
-          callback(err, Boolean(body.has_issues));
-        });
+      lint: function (repo) {
+        return Boolean(repo.has_issues);
       }
     },
     {
       message: 'has a homepage if it is using GitHub Pages',
-      lint: function (repoURL, callback) {
-        request(options, function (err, body) {
-          callback(err, body.has_pages ? Boolean(body.homepage) : true);
-        });
+      lint: function (repo) {
+        return repo.has_pages ? Boolean(repo.homepage) : true;
       }
     }
   ],
   lintAll: function (callback) {
-    async.map(module.exports.linters, function (linter, mapCallback) {
-      linter.lint(repoURL, function (err, result) {
-        mapCallback(err, {
-          message: linter.message,
-          result: result
-        });
+    request(options, function (err, repo) {
+      request(commitOptions, function (err, commits) {
+        callback(err, module.exports.linters.map(function (linter) {
+          return {
+            message: linter.message,
+            result: linter.lint(repo, commits)
+          };
+        }));
       });
-    }, callback);
+    });
   }
 };
