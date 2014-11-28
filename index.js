@@ -18,15 +18,20 @@ var githubRequest = request.defaults({
 module.exports = {
   linters: linters,
   lintAll: function (callback) {
-    githubRequest(repoURL, function (err, repo) {
-      githubRequest(repoURL + '/commits', function (err, commits) {
-        callback(err, linters.map(function (linter) {
-          return {
-            message: linter.message,
-            result: linter.lint(repo, commits)
-          };
-        }));
-      });
+    async.parallel([
+      function (callback) {
+        githubRequest(repoURL, callback);
+      },
+      function (callback) {
+        githubRequest(repoURL + '/commits', callback);
+      }
+    ], function (err, data) {
+      callback(err, linters.map(function (linter) {
+        return {
+          message: linter.message,
+          result: linter.lint.apply(linter, data)
+        };
+      }));
     });
   }
 };
