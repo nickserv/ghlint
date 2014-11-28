@@ -9,6 +9,7 @@ var githubRequest = request.defaults({
     Accept: 'application/vnd.github.v3',
     'User-Agent': 'ghlint'
   },
+  json: true,
   qs: {
     client_id: process.env.GHLINT_ID,
     client_secret: process.env.GHLINT_SECRET
@@ -20,10 +21,14 @@ module.exports = {
   lintAll: function (callback) {
     async.parallel([
       function (callback) {
-        githubRequest(repoURL, callback);
+        githubRequest(repoURL, function (error, response, body) {
+          callback(error, body);
+        });
       },
       function (callback) {
-        githubRequest(repoURL + '/commits', callback);
+        githubRequest(repoURL + '/commits', function (error, response, body) {
+          callback(error, body);
+        });
       }
     ], function (err, data) {
       callback(err, linters.map(function (linter) {
