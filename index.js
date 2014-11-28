@@ -3,7 +3,6 @@ var async = require('async');
 var request = require('request');
 var linters = require('./linters');
 
-var repoURL = 'https://api.github.com/repos/nicolasmccurdy/repos';
 var githubRequest = request.defaults({
   headers: {
     Accept: 'application/vnd.github.v3',
@@ -18,25 +17,36 @@ var githubRequest = request.defaults({
 
 module.exports = {
   linters: linters,
-  lintAll: function (callback) {
+  lintAll: function (repo, callback) {
+    var repoURL = 'https://api.github.com/repos/' + repo;
     async.parallel([
       function (callback) {
         githubRequest(repoURL, function (error, response, body) {
+          if (!error && response.statusCode !== 200) {
+            error = 'HTTP Error ' + response.statusCode;
+          }
           callback(error, body);
         });
       },
       function (callback) {
         githubRequest(repoURL + '/commits', function (error, response, body) {
+          if (!error && response.statusCode !== 200) {
+            error = 'HTTP Error ' + response.statusCode;
+          }
           callback(error, body);
         });
       }
-    ], function (err, data) {
-      callback(err, linters.map(function (linter) {
-        return {
-          message: linter.message,
-          result: linter.lint.apply(linter, data)
-        };
-      }));
+    ], function (error, data) {
+      if (error) {
+        callback(error);
+      } else {
+        callback(null, linters.map(function (linter) {
+          return {
+            message: linter.message,
+            result: linter.lint.apply(linter, data)
+          };
+        }));
+      }
     });
   }
 };
