@@ -34,5 +34,13 @@ module.exports = [
     lint: function (repo) {
       return repo.has_pages ? Boolean(repo.homepage) : true;
     }
+  },
+  {
+    message: 'has a license file in the root directory',
+    lint: function (_, _, contents) {
+      return contents.some(function (content) {
+        return content.type === 'file' && /license/i.test(content.name);
+      });
+    }
   }
 ];

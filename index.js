@@ -35,6 +35,14 @@ module.exports = {
           }
           callback(error, body);
         });
+      },
+      function (callback) {
+        githubRequest(repoURL + '/contents', function (error, response, body) {
+          if (!error && response.statusCode !== 200) {
+            error = 'HTTP Error ' + response.statusCode;
+          }
+          callback(error, body);
+        });
       }
     ], function (error, data) {
       if (error) {
