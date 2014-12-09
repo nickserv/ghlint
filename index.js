@@ -1,4 +1,3 @@
-var _ = require('underscore');
 var async = require('async');
 var request = require('request');
 var linters = require('./linters');
