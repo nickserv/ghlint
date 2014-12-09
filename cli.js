@@ -1,11 +1,13 @@
 #!/usr/bin/env node
+var colors = require('colors');
 var ghlint = require('./index');
 
 function printResults(repo, results) {
   console.log(repo + ':');
   results.forEach(function (result) {
+    var color = result.result ? 'green' : 'red';
     var mark = result.result ? '✓' : '✖';
-    console.log('  %s %s', mark, result.message);
+    console.log('  %s %s'[color], mark, result.message);
   });
 }
 
