@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 var ghlint = require('./index');
-var Table = require('cli-table');
 
-function printResults(results) {
-  var table = new Table({ head: ['Linter', 'Status'] });
+function printResults(repo, results) {
+  console.log(repo + ':');
   results.forEach(function (result) {
-    table.push([result.message, result.result]);
+    var mark = result.result ? '✓' : '✖';
+    console.log('  %s %s', mark, result.message);
   });
-  console.log(table.toString());
 }
 
 var repo = process.argv[2];
@@ -16,7 +15,7 @@ if (repo) {
     if (err) {
       console.error(err);
     } else {
-      printResults(linters);
+      printResults(repo, linters);
     }
   });
 } else {
