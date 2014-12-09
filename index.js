@@ -1,18 +1,29 @@
 var async = require('async');
-var request = require('request');
+var https = require('https');
 var linters = require('./linters');
 
-var githubRequest = request.defaults({
-  headers: {
-    Accept: 'application/vnd.github.v3',
-    'User-Agent': 'ghlint'
-  },
-  json: true,
-  qs: {
-    client_id: process.env.GHLINT_ID,
-    client_secret: process.env.GHLINT_SECRET
-  }
-});
+var queryString = '?client_id=' + process.env.GHLINT_ID + '&client_secret=' + process.env.GHLINT_SECRET;
+
+function githubRequest(repoURL, callback) {
+  https.get({
+    host: 'api.github.com',
+    path: repoURL + queryString,
+    headers: {
+      Accept: 'application/vnd.github.v3',
+      'User-Agent': 'ghlint'
+    }
+  }, function (res) {
+    var data = '';
+
+    res.on('data', function (chunk) {
+      data += chunk;
+    });
+
+    res.on('end', function () {
+      callback(null, JSON.parse(data));
+    });
+  }).on('error', callback);
+}
 
 module.exports = {
   linters: linters,
@@ -20,28 +31,13 @@ module.exports = {
     var repoURL = 'https://api.github.com/repos/' + repo;
     async.parallel([
       function (callback) {
-        githubRequest(repoURL, function (error, response, body) {
-          if (!error && response.statusCode !== 200) {
-            error = 'HTTP Error ' + response.statusCode;
-          }
-          callback(error, body);
-        });
+        githubRequest(repoURL, callback);
       },
       function (callback) {
-        githubRequest(repoURL + '/commits', function (error, response, body) {
-          if (!error && response.statusCode !== 200) {
-            error = 'HTTP Error ' + response.statusCode;
-          }
-          callback(error, body);
-        });
+        githubRequest(repoURL + '/commits', callback);
       },
       function (callback) {
-        githubRequest(repoURL + '/contents', function (error, response, body) {
-          if (!error && response.statusCode !== 200) {
-            error = 'HTTP Error ' + response.statusCode;
-          }
-          callback(error, body);
-        });
+        githubRequest(repoURL + '/contents', callback);
       }
     ], function (error, data) {
       if (error) {
