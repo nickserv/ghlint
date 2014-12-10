@@ -35,7 +35,10 @@ if (repo) {
       if (err) {
         console.error(err);
       } else {
-        repos.forEach(function (repoResults) {
+        repos.forEach(function (repoResults, index) {
+          if (index !== 0) {
+            console.log();
+          }
           printResults(repoResults.name, repoResults.results);
         });
       }
