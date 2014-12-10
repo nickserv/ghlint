@@ -20,7 +20,14 @@ function githubRequest(repoURL, callback) {
     });
 
     res.on('end', function () {
-      callback(null, JSON.parse(data));
+      data = JSON.parse(data);
+      if (res.statusCode === 200) {
+        callback(null, data);
+      } else if (data.message) {
+        callback(data.message);
+      } else {
+        callback('Error ' + res.statusCode);
+      }
     });
   }).on('error', callback);
 }
