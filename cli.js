@@ -1,15 +1,24 @@
 #!/usr/bin/env node
 var colors = require('colors');
 var ghlint = require('./index');
+var util = require('util');
 
 function printResults(repo, results) {
   console.log(repo + ':');
   results.forEach(function (result) {
-    var color = result.result ? 'green' : 'red';
     var mark = result.result ? '✓' : '✖';
-    console.log('  %s %s'[color], mark, result.message);
+    var output = util.format('  %s %s', mark, result.message);
+    if (colors.enabled) {
+      output = output[result.result ? 'green' : 'red'];
+    }
+    console.log(output);
   });
 }
+
+// Remove --no-color from the args if it is there.
+process.argv = process.argv.filter(function (arg) {
+  return arg !== '--no-color';
+});
 
 var repo = process.argv[2];
 if (repo) {
