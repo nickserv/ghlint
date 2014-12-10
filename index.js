@@ -51,5 +51,25 @@ module.exports = {
         }));
       }
     });
+  },
+  lintUserRepos: function (user, callback) {
+    githubRequest('https://api.github.com/users/' + user + '/repos', function (error, body) {
+      if (error) {
+        callback(error);
+      } else {
+        async.map(body, function (repo, callback) {
+          module.exports.lintRepo(repo.full_name, function (error, body) {
+            if (error) {
+              callback(error);
+            } else {
+              callback(error, {
+                name: repo.full_name,
+                results: body
+              });
+            }
+          });
+        }, callback);
+      }
+    });
   }
 };

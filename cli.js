@@ -22,13 +22,25 @@ process.argv = process.argv.filter(function (arg) {
 
 var repo = process.argv[2];
 if (repo) {
-  ghlint.lintRepo(repo, function (err, linters) {
-    if (err) {
-      console.error(err);
-    } else {
-      printResults(repo, linters);
-    }
-  });
+  if (repo.indexOf('/') > -1) {
+    ghlint.lintRepo(repo, function (err, linters) {
+      if (err) {
+        console.error(err);
+      } else {
+        printResults(repo, linters);
+      }
+    });
+  } else {
+    ghlint.lintUserRepos(repo, function (err, repos) {
+      if (err) {
+        console.error(err);
+      } else {
+        repos.forEach(function (repoResults) {
+          printResults(repoResults.name, repoResults.results);
+        });
+      }
+    });
+  }
 } else {
   console.error('Usage: ghlint <repo>');
 }
