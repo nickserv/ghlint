@@ -14,10 +14,10 @@ It is recommended that you register a GitHub application to increase your rate l
 ### Command Line
 Please note that the command line is experimental, still requires a client ID and secret, and may be removed in the future.
 
-1. Install Node.
+1. Install [Node](http://nodejs.org/download/).
 2. `npm install -g ghlint`
 3. `ghlint`
 
 ### Library
-1. Install Node.
+1. Install [Node](http://nodejs.org/download/).
 2. `npm install --save ghlint`
