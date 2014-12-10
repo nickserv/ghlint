@@ -27,7 +27,7 @@ function githubRequest(repoURL, callback) {
 
 module.exports = {
   linters: linters,
-  lintAll: function (repo, callback) {
+  lintRepo: function (repo, callback) {
     var repoURL = 'https://api.github.com/repos/' + repo;
     async.parallel([
       function (callback) {

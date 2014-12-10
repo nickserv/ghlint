@@ -22,7 +22,7 @@ process.argv = process.argv.filter(function (arg) {
 
 var repo = process.argv[2];
 if (repo) {
-  ghlint.lintAll(repo, function (err, linters) {
+  ghlint.lintRepo(repo, function (err, linters) {
     if (err) {
       console.error(err);
     } else {
