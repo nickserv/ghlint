@@ -1,6 +1,7 @@
 ghlint
 ======
 [![npm version](https://badge.fury.io/js/ghlint.svg)](http://badge.fury.io/js/ghlint)
+[![Dependency Status](https://gemnasium.com/nicolasmccurdy/ghlint.svg)](https://gemnasium.com/nicolasmccurdy/ghlint)
 
 A linter for GitHub projects.
 
