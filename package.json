@@ -1,6 +1,6 @@
 {
   "name": "ghlint",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "A linter for GitHub projects.",
   "main": "index.js",
   "bin": {
