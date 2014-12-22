@@ -5,6 +5,7 @@ var util = require('util');
 
 function printResults(repo, results) {
   console.log(repo + ':');
+
   results.forEach(function (result) {
     var mark = result.result ? '✓' : '✖';
     var output = util.format('  %s %s', mark, result.message);
@@ -21,6 +22,7 @@ process.argv = process.argv.filter(function (arg) {
 });
 
 var repo = process.argv[2];
+
 if (repo) {
   if (repo.indexOf('/') > -1) {
     ghlint.lintRepo(repo, function (err, linters) {

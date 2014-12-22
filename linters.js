@@ -1,7 +1,7 @@
 module.exports = [
   {
     message: 'has commits',
-    lint: function (_, commits) {
+    lint: function (repo, commits) {
       return commits.length > 0;
     }
   },
@@ -37,7 +37,7 @@ module.exports = [
   },
   {
     message: 'has a license file in the root directory',
-    lint: function (_, _, contents) {
+    lint: function (repo, commits, contents) {
       return contents.some(function (content) {
         return content.type === 'file' && /license/i.test(content.name);
       });

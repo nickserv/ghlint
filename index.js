@@ -34,8 +34,10 @@ function githubRequest(repoURL, callback) {
 
 module.exports = {
   linters: linters,
+
   lintRepo: function (repo, callback) {
     var repoURL = 'https://api.github.com/repos/' + repo;
+
     async.parallel([
       function (callback) {
         githubRequest(repoURL, callback);
@@ -59,6 +61,7 @@ module.exports = {
       }
     });
   },
+
   lintUserRepos: function (user, callback) {
     githubRequest('https://api.github.com/users/' + user + '/repos', function (error, body) {
       if (error) {
