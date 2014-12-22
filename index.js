@@ -1,50 +1,39 @@
 var async = require('async');
-var https = require('https');
+var GitHubApi = require('github');
 var linters = require('./linters');
 
-var queryString = '?client_id=' + process.env.GHLINT_ID + '&client_secret=' + process.env.GHLINT_SECRET;
+var github = new GitHubApi({
+  version: '3.0.0',
+  headers: { 'User-Agent': 'ghlint' }
+});
 
-function githubRequest(repoURL, callback) {
-  https.get({
-    host: 'api.github.com',
-    path: repoURL + queryString,
-    headers: {
-      Accept: 'application/vnd.github.v3',
-      'User-Agent': 'ghlint'
-    }
-  }, function (res) {
-    var data = '';
-
-    res.on('data', function (chunk) {
-      data += chunk;
-    });
-
-    res.on('end', function () {
-      data = JSON.parse(data);
-      if (res.statusCode === 200) {
-        callback(null, data);
-      } else if (data.message) {
-        callback(new Error(data.message));
-      } else {
-        callback(new Error('Error ' + res.statusCode));
-      }
-    });
-  }).on('error', callback);
+if (process.env.GHLINT_ID && process.env.GHLINT_SECRET) {
+  github.authenticate({
+    type: 'oauth',
+    key: process.env.GHLINT_ID,
+    secret: process.env.GHLINT_SECRET
+  });
 }
 
 module.exports = {
   linters: linters,
-  lintRepo: function (repo, callback) {
-    var repoURL = 'https://api.github.com/repos/' + repo;
+  lintRepo: function (userAndRepo, callback) {
+    var parts = userAndRepo.split('/');
+    var options = {
+      user: parts[0],
+      repo: parts[1],
+      path: ''
+    };
+
     async.parallel([
       function (callback) {
-        githubRequest(repoURL, callback);
+        github.repos.get(options, callback);
       },
       function (callback) {
-        githubRequest(repoURL + '/commits', callback);
+        github.repos.getCommits(options, callback);
       },
       function (callback) {
-        githubRequest(repoURL + '/contents', callback);
+        github.repos.getContent(options, callback);
       }
     ], function (error, data) {
       if (error) {
@@ -60,7 +49,7 @@ module.exports = {
     });
   },
   lintUserRepos: function (user, callback) {
-    githubRequest('https://api.github.com/users/' + user + '/repos', function (error, body) {
+    github.repos.getFromUser({ user: user }, function (error, body) {
       if (error) {
         callback(error);
       } else {
