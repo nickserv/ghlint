@@ -14,8 +14,8 @@ if (process.env.GHLINT_ID && process.env.GHLINT_SECRET) {
 
 module.exports = {
   linters: linters,
-  lintRepo: function (userAndRepo, callback) {
-    var parts = userAndRepo.split('/');
+  lintRepo: function (repo, callback) {
+    var parts = repo.split('/');
     var options = {
       user: parts[0],
       repo: parts[1],
