@@ -23,3 +23,7 @@ Please note that the command line is experimental, still requires a client ID an
 ### Library
 1. Install [Node](http://nodejs.org/download/).
 2. `npm install --save ghlint`
+
+API Documentation
+-----------------
+There's no online copy of the docs yet, but they can be generated locally by installing [docco](http://jashkenas.github.io/docco/) and running `docco *.js` in the root of the repo. Then just open `docs/index.html`.
