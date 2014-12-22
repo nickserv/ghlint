@@ -25,7 +25,7 @@ if (repo) {
   if (repo.indexOf('/') > -1) {
     ghlint.lintRepo(repo, function (err, linters) {
       if (err) {
-        console.error(err);
+        console.error(err.message);
       } else {
         printResults(repo, linters);
       }
@@ -33,7 +33,7 @@ if (repo) {
   } else {
     ghlint.lintUserRepos(repo, function (err, repos) {
       if (err) {
-        console.error(err);
+        console.error(err.message);
       } else {
         repos.forEach(function (repoResults, index) {
           if (index !== 0) {

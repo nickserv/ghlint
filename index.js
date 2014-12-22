@@ -24,9 +24,9 @@ function githubRequest(repoURL, callback) {
       if (res.statusCode === 200) {
         callback(null, data);
       } else if (data.message) {
-        callback(data.message);
+        callback(new Error(data.message));
       } else {
-        callback('Error ' + res.statusCode);
+        callback(new Error('Error ' + res.statusCode));
       }
     });
   }).on('error', callback);
