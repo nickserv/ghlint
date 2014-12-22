@@ -1,9 +1,13 @@
+// The main module for ghlint. You can access this with `require('ghlint')`.
+
 var async = require('async');
 var https = require('https');
 var linters = require('./linters');
 
+// The query string for GitHub API requests. Includes ghlint's ID and secret, taken from the `$GHLINT_ID` and `$GHLINT_SECRET` environment variables. These should never be shared.
 var queryString = '?client_id=' + process.env.GHLINT_ID + '&client_secret=' + process.env.GHLINT_SECRET;
 
+// Performs a GET request on a GitHub API endpoint. repoURL must be the full path to a GitHub API endpoint, starting with /. The callback is passed an error (may include GitHub API errors and HTTP errors) and the full response body.
 function githubRequest(repoURL, callback) {
   https.get({
     host: 'api.github.com',
@@ -21,6 +25,8 @@ function githubRequest(repoURL, callback) {
 
     res.on('end', function () {
       data = JSON.parse(data);
+
+      // If there is an HTTP error, or a message field in the response, the callback is given an error.
       if (res.statusCode === 200) {
         callback(null, data);
       } else if (data.message) {
@@ -33,8 +39,10 @@ function githubRequest(repoURL, callback) {
 }
 
 module.exports = {
+  // Exposes the Array of Linters. See the `linters.js` documentation for more details.
   linters: linters,
 
+  // Runs all Linters on a specific repo. repo must be a String in the form "username/repository". The callback is passed an error and an Array of Results. A Result is the same as a Linter (see `linters.js`), except that the lint function is replaced with the Boolean result of the Linter (true is passing, false is failing).
   lintRepo: function (repo, callback) {
     var repoURL = 'https://api.github.com/repos/' + repo;
 
@@ -62,6 +70,7 @@ module.exports = {
     });
   },
 
+  // Runs all Linters on all of a user's repos. user must be a String representing a username or organization on GitHub. The callback is passed an error and an Array of RepoResults. A RepoResult represents all Linter results for a specific repo. It is an Object with a String name representing its name (in the format "username/repository"), and a results property that exposes all Results for the repo (see documentation for `lintRepo()`).
   lintUserRepos: function (user, callback) {
     githubRequest('https://api.github.com/users/' + user + '/repos', function (error, body) {
       if (error) {
@@ -72,6 +81,7 @@ module.exports = {
             if (error) {
               callback(error);
             } else {
+              // Build an object in the RepoResult format.
               callback(error, {
                 name: repo.full_name,
                 results: body
