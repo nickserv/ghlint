@@ -2,10 +2,7 @@ var async = require('async');
 var GitHubApi = require('github');
 var linters = require('./linters');
 
-var github = new GitHubApi({
-  version: '3.0.0',
-  headers: { 'User-Agent': 'ghlint' }
-});
+var github = new GitHubApi({ version: '3.0.0' });
 
 if (process.env.GHLINT_ID && process.env.GHLINT_SECRET) {
   github.authenticate({
