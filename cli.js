@@ -30,18 +30,18 @@ var repo = process.argv[2];
 if (repo) {
   // If a specific repo is given...
   if (repo.indexOf('/') > -1) {
-    ghlint.lintRepo(repo, function (err, linters) {
-      if (err) {
-        console.error(err.message);
+    ghlint.lintRepo(repo, function (error, linters) {
+      if (error) {
+        console.error(error.message);
       } else {
         printResults(repo, linters);
       }
     });
   } else {
     // If a username is given...
-    ghlint.lintUserRepos(repo, function (err, repos) {
-      if (err) {
-        console.error(err.message);
+    ghlint.lintUserRepos(repo, function (error, repos) {
+      if (error) {
+        console.error(error.message);
       } else {
         repos.forEach(function (repoResults, index) {
           // Print a blank line between the results for multiple repos.
