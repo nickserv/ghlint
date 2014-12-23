@@ -1,6 +1,6 @@
 {
   "name": "ghlint",
-  "version": "0.8.0-alpha.1",
+  "version": "0.8.0-alpha.2",
   "description": "A linter for GitHub projects.",
   "main": "index.js",
   "bin": {
