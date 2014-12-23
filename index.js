@@ -18,10 +18,10 @@ if (fs.existsSync(tokenPath)) {
 }
 
 // Performs a GET request on a GitHub API endpoint. repoURL must be the full path to a GitHub API endpoint, starting with /. The callback is passed an error (may include GitHub API errors and HTTP errors) and the full response body.
-function githubRequest(repoURL, callback) {
+function githubRequest(url, callback) {
   https.get({
     host: 'api.github.com',
-    path: repoURL + queryString,
+    path: url + queryString,
     headers: {
       Accept: 'application/vnd.github.v3',
       'User-Agent': 'ghlint'
@@ -52,19 +52,19 @@ module.exports = {
   // Exposes the Array of Linters. See the `linters.js` documentation for more details.
   linters: linters,
 
-  // Runs all Linters on a specific repo. repo must be a String in the form "username/repository". The callback is passed an error and an Array of Results. A Result is the same as a Linter (see `linters.js`), except that the lint function is replaced with the Boolean result of the Linter (true is passing, false is failing).
-  lintRepo: function (repo, callback) {
-    var repoURL = 'https://api.github.com/repos/' + repo;
+  // Runs all Linters on a specific repo. owner must be a String representing the owner (user or organization) of the repo, and repo must be a String representing its name. The callback is passed an error and an Array of Results. A Result is the same as a Linter (see `linters.js`), except that the lint function is replaced with the Boolean result of the Linter (true is passing, false is failing).
+  lintRepo: function (owner, repo, callback) {
+    var url = 'https://api.github.com/repos/' + owner + '/' + repo;
 
     async.parallel([
       function (callback) {
-        githubRequest(repoURL, callback);
+        githubRequest(url, callback);
       },
       function (callback) {
-        githubRequest(repoURL + '/commits', callback);
+        githubRequest(url + '/commits', callback);
       },
       function (callback) {
-        githubRequest(repoURL + '/contents', callback);
+        githubRequest(url + '/contents', callback);
       }
     ], function (error, data) {
       if (error) {
@@ -80,20 +80,21 @@ module.exports = {
     });
   },
 
-  // Runs all Linters on all of a user's repos. user must be a String representing a username or organization on GitHub. The callback is passed an error and an Array of RepoResults. A RepoResult represents all Linter results for a specific repo. It is an Object with a String name representing its name (in the format "username/repository"), and a results property that exposes all Results for the repo (see documentation for `lintRepo()`).
-  lintUserRepos: function (user, callback) {
-    githubRequest('https://api.github.com/users/' + user + '/repos', function (error, body) {
+  // Runs all Linters on all of an owner's repos. owner must be a String representing a user or organization on GitHub. The callback is passed an error and an Array of RepoResults. A RepoResult represents all Linter results for a specific repo. It is an Object with a String owner representing its owner, a string name representing its name, and a results property that exposes all Results for the repo (see documentation for `lintRepo()`).
+  lintReposByOwner: function (owner, callback) {
+    githubRequest('https://api.github.com/users/' + owner + '/repos', function (error, body) {
       if (error) {
         callback(error);
       } else {
         async.map(body, function (repo, callback) {
-          module.exports.lintRepo(repo.full_name, function (error, body) {
+          module.exports.lintRepo(repo.owner.login, repo.name, function (error, body) {
             if (error) {
               callback(error);
             } else {
               // Build an object in the RepoResult format.
               callback(error, {
-                name: repo.full_name,
+                owner: repo.owner.login,
+                name: repo.name,
                 results: body
               });
             }
