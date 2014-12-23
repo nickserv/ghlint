@@ -1,11 +1,21 @@
 // The main module for ghlint. You can access this with `require('ghlint')`.
 
 var async = require('async');
+var fs = require('fs');
 var https = require('https');
 var linters = require('./linters');
+var path = require('path');
 
-// The query string for GitHub API requests. Includes ghlint's ID and secret, taken from the `$GHLINT_ID` and `$GHLINT_SECRET` environment variables. These should never be shared.
-var queryString = '?client_id=' + process.env.GHLINT_ID + '&client_secret=' + process.env.GHLINT_SECRET;
+// Authenticate to the GitHub API with OAuth2 (if possible).
+var tokenPath = path.join(process.env.HOME, '.ghlint_token');
+var queryString = '';
+if (fs.existsSync(tokenPath)) {
+  // Use a personal access token stored in `~/.ghlint_token`. Note that ghlint only uses public access for now, so you won't need to enable any scopes.
+  queryString = '?access_token=' + fs.readFileSync(tokenPath);
+} else if (process.env.GHLINT_ID && process.env.GHLINT_SECRET) {
+  // Use ghlint's ID and secret, stored in the `$GHLINT_ID` and `$GHLINT_SECRET` environment variables. These should never be shared.
+  queryString = '?client_id=' + process.env.GHLINT_ID + '&client_secret=' + process.env.GHLINT_SECRET;
+}
 
 // Performs a GET request on a GitHub API endpoint. repoURL must be the full path to a GitHub API endpoint, starting with /. The callback is passed an error (may include GitHub API errors and HTTP errors) and the full response body.
 function githubRequest(repoURL, callback) {
