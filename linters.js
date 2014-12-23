@@ -58,5 +58,15 @@ module.exports = [
         return content.type === 'file' && /license/i.test(content.name);
       });
     }
+  },
+
+  {
+    message: 'has a readme file in the root directory',
+    lint: function (repo, commits, contents) {
+      // At least one file in the root directory should have "readme" in its name (case insensitive).
+      return contents.some(function (content) {
+        return content.type === 'file' && /readme/i.test(content.name);
+      });
+    }
   }
 ];
