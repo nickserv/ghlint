@@ -11,7 +11,7 @@ var tokenPath = path.join(process.env.HOME, '.ghlint_token');
 var queryString = '';
 if (fs.existsSync(tokenPath)) {
   // Use a personal access token stored in `~/.ghlint_token`. Note that ghlint only uses public access for now, so you won't need to enable any scopes.
-  queryString = '?access_token=' + fs.readFileSync(tokenPath);
+  queryString = '?access_token=' + fs.readFileSync(tokenPath, { encoding: 'utf-8' }).trim();
 } else if (process.env.GHLINT_ID && process.env.GHLINT_SECRET) {
   // Use ghlint's ID and secret, stored in the `$GHLINT_ID` and `$GHLINT_SECRET` environment variables. These should never be shared.
   queryString = '?client_id=' + process.env.GHLINT_ID + '&client_secret=' + process.env.GHLINT_SECRET;
