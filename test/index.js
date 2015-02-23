@@ -1,5 +1,5 @@
 var assert = require('assert');
-var ghlint = require('../index')
+var ghlint = require('../index');
 
 describe('ghlint', function () {
   describe('.linters', function () {
@@ -27,9 +27,9 @@ describe('ghlint', function () {
           assert.ifError(error);
           assert(results.length);
           assert(results.every(function (result) {
-            return result.message
-              && typeof result.message === 'string'
-              && typeof result.result === 'boolean';
+            return result.message &&
+                   typeof result.message === 'string' &&
+                   typeof result.result === 'boolean';
           }));
           done();
         });
@@ -64,10 +64,10 @@ describe('ghlint', function () {
           assert.ifError(error);
           assert(repoResults.length);
           assert(repoResults.every(function (result) {
-            return typeof result.owner === 'string'
-              && typeof result.name === 'string'
-              && typeof result.results === 'object'
-              && result.results.length;
+            return typeof result.owner === 'string' &&
+                   typeof result.name === 'string' &&
+                   typeof result.results === 'object' &&
+                   result.results.length;
           }));
           done();
         });
