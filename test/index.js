@@ -39,7 +39,7 @@ describe('ghlint', function () {
     context('with a fake repo', function () {
       it('passes an error', function (done) {
         ghlint.lintRepo('nicolasmccurdy', 'qwertyuiop', function (error) {
-          assert(error);
+          assert(error && error.message === 'Not Found');
           done();
         });
       });
@@ -48,7 +48,7 @@ describe('ghlint', function () {
     context('with a fake owner', function () {
       it('passes an error', function (done) {
         ghlint.lintRepo('login', 'repo', function (error) {
-          assert(error);
+          assert(error && error.message === 'Not Found');
           done();
         });
       });
@@ -77,7 +77,7 @@ describe('ghlint', function () {
     context('with a fake user', function () {
       it('passes an error', function (done) {
         ghlint.lintReposByOwner('login', function (error) {
-          assert(error);
+          assert(error && error.message === 'Not Found');
           done();
         });
       });
