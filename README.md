@@ -3,6 +3,7 @@ ghlint
 [![npm version](https://badge.fury.io/js/ghlint.svg)](http://badge.fury.io/js/ghlint)
 [![Build Status](https://travis-ci.org/nicolasmccurdy/ghlint.svg?branch=master)](https://travis-ci.org/nicolasmccurdy/ghlint)
 [![Dependency Status](https://gemnasium.com/nicolasmccurdy/ghlint.svg)](https://gemnasium.com/nicolasmccurdy/ghlint)
+[![Code Climate](https://codeclimate.com/github/nicolasmccurdy/ghlint/badges/gpa.svg)](https://codeclimate.com/github/nicolasmccurdy/ghlint)
 
 A linter for GitHub projects.
 
