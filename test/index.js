@@ -8,15 +8,17 @@ describe('ghlint', function () {
     });
 
     it('has linters with a String message', function () {
-      assert(ghlint.linters.every(function (linter) {
-        return linter.message && typeof linter.message === 'string';
-      }));
+      ghlint.linters.forEach(function (linter) {
+        assert(linter.message);
+        assert.equal(typeof linter.message, 'string');
+      });
     });
 
     it('has linters with a lint function', function () {
-      assert(ghlint.linters.every(function (linter) {
-        return linter.lint && typeof linter.lint === 'function';
-      }));
+      ghlint.linters.forEach(function (linter) {
+        assert(linter.lint);
+        assert.equal(typeof linter.lint, 'function');
+      });
     });
   });
 
@@ -26,11 +28,11 @@ describe('ghlint', function () {
         ghlint.lintRepo('nicolasmccurdy', 'ghlint', function (error, results) {
           assert.ifError(error);
           assert(results.length > 1);
-          assert(results.every(function (result) {
-            return result.message &&
-                   typeof result.message === 'string' &&
-                   typeof result.result === 'boolean';
-          }));
+          results.forEach(function (result) {
+            assert(result.message);
+            assert(typeof result.message, 'string');
+            assert(typeof result.result, 'boolean');
+          });
           done();
         });
       });
@@ -65,12 +67,12 @@ describe('ghlint', function () {
         ghlint.lintReposByOwner('nicolasmccurdy', function (error, repoResults) {
           assert.ifError(error);
           assert(repoResults.length > 1);
-          assert(repoResults.every(function (result) {
-            return typeof result.owner === 'string' &&
-                   typeof result.name === 'string' &&
-                   typeof result.results === 'object' &&
-                   result.results.length;
-          }));
+          repoResults.forEach(function (result) {
+            assert(typeof result.owner, 'string');
+            assert(typeof result.name, 'string');
+            assert(typeof result.results, 'object');
+            assert(result.results.length);
+          });
           done();
         });
       });
