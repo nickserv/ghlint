@@ -25,18 +25,36 @@ describe('ghlint', function () {
 
   describe('.lintRepo()', function () {
     context('with a real repo', function () {
-      it('passes valid Results', function (done) {
-        ghlint.lintRepo('mock_user', 'mock_repo', function (error, results) {
-          assert.ifError(error);
-          assert(results.length > 1);
-          results.forEach(function (result) {
-            assert(result.message);
-            assert(typeof result.message, 'string');
-            assert(typeof result.result, 'boolean');
+      context('where all linters pass', function () {
+        it('passes valid Results', function (done) {
+          ghlint.lintRepo('mock_user', 'mock_repo', function (error, results) {
+            assert.ifError(error);
+            assert(results.length > 1);
+            results.forEach(function (result) {
+              assert(result.message);
+              assert(typeof result.message, 'string');
+              assert.equal(result.result, true);
+            });
+            done();
           });
-          done();
         });
       });
+
+      context('where all linters fail', function () {
+        it('passes invalid Results', function (done) {
+          ghlint.lintRepo('mock_user', 'mock_repo_2', function (error, results) {
+            assert.ifError(error);
+            assert(results.length > 1);
+            results.forEach(function (result) {
+              assert(result.message);
+              assert(typeof result.message, 'string');
+              assert.equal(result.result, false);
+            });
+            done();
+          });
+        });
+      });
+
     });
 
     context('with a fake repo', function () {

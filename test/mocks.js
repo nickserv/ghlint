@@ -4,18 +4,42 @@ var githubMock = nock('https://api.github.com')
                    .persist();
 
 // GitHub Responses
+
 githubMock.get('/repos/mock_user/mock_repo')
-          .reply(200, {});
+          .reply(200, {
+            name: 'mock_repo',
+            description: 'Hello, world!',
+            homepage: 'http://example.com/',
+            default_branch: 'master',
+            has_issues: true,
+            has_pages: true
+          });
 githubMock.get('/repos/mock_user/mock_repo/commits')
-          .reply(200, []);
-githubMock.get('/repos/mock_user/mock_repo/contents')
           .reply(200, [1, 2, 3]);
+githubMock.get('/repos/mock_user/mock_repo/contents')
+          .reply(200, [
+            {
+              type: 'file',
+              name: 'LICENSE'
+            },
+            {
+              type: 'file',
+              name: 'README'
+            }
+          ]);
+
 githubMock.get('/repos/mock_user/mock_repo_2')
-          .reply(200, {});
+          .reply(200, {
+            name: 'Mock_Repo_2',
+            default_branch: 'develop',
+            has_issues: false,
+            has_pages: true
+          });
 githubMock.get('/repos/mock_user/mock_repo_2/commits')
-          .reply(200, {});
+          .reply(200, []);
 githubMock.get('/repos/mock_user/mock_repo_2/contents')
-          .reply(200, {});
+          .reply(200, []);
+
 githubMock.get('/users/mock_user/repos')
           .reply(200, [
             {

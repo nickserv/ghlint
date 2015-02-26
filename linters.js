@@ -24,7 +24,7 @@ module.exports = [
   {
     message: 'has a description',
     lint: function (repo) {
-      return Boolean(repo.full_name);
+      return Boolean(repo.description);
     }
   },
 
