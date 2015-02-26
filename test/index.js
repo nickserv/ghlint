@@ -1,5 +1,6 @@
 var assert = require('assert');
 var ghlint = require('../index');
+require('./mocks');
 
 describe('ghlint', function () {
   describe('.linters', function () {
@@ -25,7 +26,7 @@ describe('ghlint', function () {
   describe('.lintRepo()', function () {
     context('with a real repo', function () {
       it('passes valid Results', function (done) {
-        ghlint.lintRepo('nicolasmccurdy', 'ghlint', function (error, results) {
+        ghlint.lintRepo('mock_user', 'mock_repo', function (error, results) {
           assert.ifError(error);
           assert(results.length > 1);
           results.forEach(function (result) {
@@ -40,7 +41,7 @@ describe('ghlint', function () {
 
     context('with a fake repo', function () {
       it('passes a "Not Found" error', function (done) {
-        ghlint.lintRepo('nicolasmccurdy', 'qwertyuiop', function (error) {
+        ghlint.lintRepo('mock_user', 'fake_repo', function (error) {
           assert(error);
           assert.equal(error.message, 'Not Found');
           done();
@@ -50,7 +51,7 @@ describe('ghlint', function () {
 
     context('with a fake owner', function () {
       it('passes a "Not Found" error', function (done) {
-        ghlint.lintRepo('login', 'repo', function (error) {
+        ghlint.lintRepo('fake_user', 'mock_repo', function (error) {
           assert(error);
           assert.equal(error.message, 'Not Found');
           done();
@@ -64,7 +65,7 @@ describe('ghlint', function () {
       it('passes valid RepoResults', function (done) {
         this.timeout(10000);
 
-        ghlint.lintReposByOwner('nicolasmccurdy', function (error, repoResults) {
+        ghlint.lintReposByOwner('mock_user', function (error, repoResults) {
           assert.ifError(error);
           assert(repoResults.length > 1);
           repoResults.forEach(function (result) {
@@ -80,7 +81,7 @@ describe('ghlint', function () {
 
     context('with a fake user', function () {
       it('passes a "Not Found" error', function (done) {
-        ghlint.lintReposByOwner('login', function (error) {
+        ghlint.lintReposByOwner('fake_user', function (error) {
           assert(error);
           assert.equal(error.message, 'Not Found');
           done();

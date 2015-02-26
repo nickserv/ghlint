@@ -54,7 +54,7 @@ module.exports = [
     message: 'has a license file in the root directory',
     lint: function (repo, commits, contents) {
       // At least one file in the root directory should have "license" in its name (case insensitive).
-      return contents.some(function (content) {
+      return Array.prototype.some.call(contents, function (content) {
         return content.type === 'file' && /license/i.test(content.name);
       });
     }
@@ -64,7 +64,7 @@ module.exports = [
     message: 'has a readme file in the root directory',
     lint: function (repo, commits, contents) {
       // At least one file in the root directory should have "readme" in its name (case insensitive).
-      return contents.some(function (content) {
+      return Array.prototype.some.call(contents, function (content) {
         return content.type === 'file' && /readme/i.test(content.name);
       });
     }
