@@ -1,4 +1,4 @@
-var assert = require('assert');
+require('./helpers');
 
 describe('CLI', function () {
   describe('ghlint', function () {

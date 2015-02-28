@@ -1,6 +1,4 @@
-var assert = require('assert');
-var ghlint = require('../index');
-require('./mocks');
+require('./helpers');
 
 describe('ghlint', function () {
   describe('.linters', function () {

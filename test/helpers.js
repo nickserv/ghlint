@@ -1,3 +1,6 @@
+global.assert = require('assert');
+global.ghlint = require('../index');
+
 var nock = require('nock');
 var githubMock = nock('https://api.github.com')
                    .filteringPath(/\?.*$/, '')
