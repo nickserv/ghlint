@@ -81,8 +81,6 @@ describe('ghlint', function () {
   describe('.lintReposByOwner()', function () {
     context('with a real owner', function () {
       it('passes valid RepoResults', function (done) {
-        this.timeout(10000);
-
         ghlint.lintReposByOwner('mock_user', function (error, repoResults) {
           assert.ifError(error);
           assert(repoResults.length > 1);
