@@ -16,8 +16,8 @@ module.exports = [
   {
     message: 'has a lowercase name',
     lint: function (repo) {
-      // Name should only contain lowercase letters, dashes, and underscores.
-      return /^[a-z\-_]+$/.test(repo.name);
+      // Name should only contain lowercase letters, numbers, dashes, and underscores.
+      return /^[a-z\d\-_]+$/.test(repo.name);
     }
   },
 
