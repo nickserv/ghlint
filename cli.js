@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // The CLI for ghlint.
 
-var colors = require('colors');
+var chalk = require('chalk');
 var ghlint = require('./index');
 var util = require('util');
 
@@ -12,16 +12,14 @@ function printResults(owner, repo, results) {
   results.forEach(function (result) {
     var mark = result.result ? '✓' : '✖';
     var output = util.format('  %s %s', mark, result.message);
-    if (colors.enabled) {
-      output = output[result.result ? 'green' : 'red'];
-    }
-    console.log(output);
+    var color = result.result ? 'green' : 'red';
+    console.log(chalk[color](output));
   });
 }
 
-// If `--no-color` has been used, colors.js has already processed it at this point. Remove `--no-color` from the args if it is still there.
+// If `--color` or `--no-color` have been used, chalk has already processed them at this point. Remove them from the args if they are still there.
 process.argv = process.argv.filter(function (arg) {
-  return arg !== '--no-color';
+  return !/^--(no-)?color$/i.test(arg);
 });
 
 // The query is the first argument of the ghlint command. The query can either represent a specific repo in the format "owner/repository", or an owner with just the name of the owner (which triggers the Linters for all of the owner's repositories).
