@@ -7,14 +7,14 @@
 // Must be given the reponse bodies of three GitHub API endpoints for a specific repository as parameters: [/repos/:owner](https://developer.github.com/v3/repos/#get), [/repos/:owner/:repo/commits](https://developer.github.com/v3/repos/commits/), and [/repos/:owner/:repo/contents](https://developer.github.com/v3/repos/contents/). These parameters are named repo, commits, and contents in the source respectively. Returns true if the Linter passes (if the repo satisfies the Linter's description) and false if it fails.
 module.exports = [
   {
-    message: 'has commits',
+    message: 'missing commits',
     lint: function (repo, commits) {
       return commits.length > 0;
     }
   },
 
   {
-    message: 'has a lowercase name',
+    message: 'repository name should be lowercased',
     lint: function (repo) {
       // Name should only contain lowercase letters, numbers, dashes, and underscores.
       return /^[a-z\d\-_]+$/.test(repo.name);
@@ -22,28 +22,28 @@ module.exports = [
   },
 
   {
-    message: 'has a description',
+    message: 'missing description',
     lint: function (repo) {
       return Boolean(repo.description);
     }
   },
 
   {
-    message: 'default branch is master',
+    message: 'default branch should be master',
     lint: function (repo) {
       return repo.default_branch === 'master';
     }
   },
 
   {
-    message: 'has issues',
+    message: 'missing issues',
     lint: function (repo) {
       return Boolean(repo.has_issues);
     }
   },
 
   {
-    message: 'has a homepage if it is using GitHub Pages',
+    message: 'uses GitHub Pages and is missing a homepage',
     lint: function (repo) {
       // This will always pass if the repo isn't using GitHub Pages.
       return repo.has_pages ? Boolean(repo.homepage) : true;
@@ -51,7 +51,7 @@ module.exports = [
   },
 
   {
-    message: 'has a license file in the root directory',
+    message: 'missing license',
     lint: function (repo, commits, contents) {
       // At least one file in the root directory should have "license" in its name (case insensitive).
       return Array.prototype.some.call(contents, function (content) {
@@ -61,7 +61,7 @@ module.exports = [
   },
 
   {
-    message: 'has a readme file in the root directory',
+    message: 'missing readme',
     lint: function (repo, commits, contents) {
       // At least one file in the root directory should have "readme" in its name (case insensitive).
       return Array.prototype.some.call(contents, function (content) {
