@@ -7,7 +7,7 @@ var util = require('util');
 
 // Given the owner and name of a repo, and the results for a specific invocation of `lintRepo()`, this will print out the repo's full name and its results as a colored list with check marks next to passing linters.
 function printResults(owner, repo, results) {
-  console.log(owner + '/' + repo + ':');
+  console.log('%s/%s:', owner, repo);
 
   results.forEach(function (result) {
     var mark = result.result ? '✓' : '✖';
