@@ -2,7 +2,7 @@
 //
 // ## Linter Properties
 // ### message (String)
-// A short description of what the Linter asserts.
+// A short description of what went wrong (assuming the linter fails).
 // ### lint (function)
 // Must be given the reponse bodies of three GitHub API endpoints for a specific repository as parameters: [/repos/:owner](https://developer.github.com/v3/repos/#get), [/repos/:owner/:repo/commits](https://developer.github.com/v3/repos/commits/), and [/repos/:owner/:repo/contents](https://developer.github.com/v3/repos/contents/). These parameters are named repo, commits, and contents in the source respectively. Returns true if the Linter passes (if the repo satisfies the Linter's description) and false if it fails.
 module.exports = [
