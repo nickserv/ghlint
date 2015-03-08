@@ -27,12 +27,7 @@ describe('ghlint', function () {
         it('passes valid Results', function (done) {
           ghlint.lintRepo('mock_user', 'mock_repo', function (error, results) {
             assert.ifError(error);
-            assert(results.length > 1);
-            results.forEach(function (result) {
-              assert(result.message);
-              assert(typeof result.message, 'string');
-              assert.equal(result.result, true);
-            });
+            assert.equal(results.length, 0);
             done();
           });
         });
@@ -42,11 +37,9 @@ describe('ghlint', function () {
         it('passes invalid Results', function (done) {
           ghlint.lintRepo('mock_user', 'mock_repo_2', function (error, results) {
             assert.ifError(error);
-            assert(results.length > 1);
+            assert(results.length);
             results.forEach(function (result) {
-              assert(result.message);
-              assert(typeof result.message, 'string');
-              assert.equal(result.result, false);
+              assert(typeof result, 'string');
             });
             done();
           });
@@ -86,7 +79,6 @@ describe('ghlint', function () {
             assert(typeof result.owner, 'string');
             assert(typeof result.name, 'string');
             assert(typeof result.results, 'object');
-            assert(result.results.length);
           });
           done();
         });

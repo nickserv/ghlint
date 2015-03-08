@@ -5,15 +5,15 @@ var chalk = require('chalk');
 var ghlint = require('./index');
 var util = require('util');
 
-// Given the owner and name of a repo, and the results for a specific invocation of `lintRepo()`, this will print out the repo's full name and its results as a colored list with check marks next to passing linters.
+// Given the owner and name of a repo, and the results for a specific invocation of `lintRepo()`, this will print out the repo's full name (which is color coded and given an icon based on its status) and a list of its failing results (if any).
 function printResults(owner, repo, results) {
-  console.log('%s/%s:', owner, repo);
+  var mark = results.length ? '✖' : '✓';
+  var output = util.format('%s %s/%s', mark, owner, repo);
+  var color = results.length ? 'red' : 'green';
+  console.log(chalk[color](output));
 
   results.forEach(function (result) {
-    var mark = result.result ? '✓' : '✖';
-    var output = util.format('  %s %s', mark, result.message);
-    var color = result.result ? 'green' : 'red';
-    console.log(chalk[color](output));
+    console.log('  %s', result);
   });
 }
 
