@@ -52,7 +52,7 @@ module.exports = {
   // Exposes the Array of Linters. See the `linters.js` documentation for more details.
   linters: linters,
 
-  // Runs all Linters on a specific repo. owner must be a String representing the owner (user or organization) of the repo, and repo must be a String representing its name. The callback is passed an error and an Array of Results. A Result is the same as a Linter (see `linters.js`), except that the lint function is replaced with the Boolean result of the Linter (true is passing, false is failing).
+  // Runs all Linters on a specific repo. owner must be a String representing the owner (user or organization) of the repo, and repo must be a String representing its name. The callback is passed an error and an Array of Results representing each failing Linter. A Result is the same as its Linter's message (see `linters.js`).
   lintRepo: function (owner, repo, callback) {
     var url = '/repos/' + owner + '/' + repo;
 
@@ -70,17 +70,16 @@ module.exports = {
       if (error) {
         callback(error);
       } else {
-        callback(null, linters.map(function (linter) {
-          return {
-            message: linter.message,
-            result: linter.lint.apply(linter, data)
-          };
+        callback(null, linters.filter(function (linter) {
+          return !linter.lint.apply(linter, data);
+        }).map(function (linter) {
+          return linter.message;
         }));
       }
     });
   },
 
-  // Runs all Linters on all of an owner's repos. owner must be a String representing a user or organization on GitHub. The callback is passed an error and an Array of RepoResults. A RepoResult represents all Linter results for a specific repo. It is an Object with a String owner representing its owner, a string name representing its name, and a results property that exposes all Results for the repo (see documentation for `lintRepo()`).
+  // Runs all Linters on all of an owner's repos. owner must be a String representing a user or organization on GitHub. The callback is passed an error and an Array of RepoResults. A RepoResult represents all Linter results for a specific repo. It is an Object with a String owner representing its owner, a string name representing its name, and a results property that exposes all Results for the repo's failing Linters (see documentation for `lintRepo()`).
   lintReposByOwner: function (owner, callback) {
     githubRequest('/users/' + owner + '/repos', function (error, body) {
       if (error) {
