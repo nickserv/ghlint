@@ -23,6 +23,8 @@ program
   .version(pkg.version)
   .description(pkg.description)
   .usage('[repos...]')
+  .option('--color', 'Forcibly enable colors')
+  .option('--no-color', 'Forcibly disable colors')
   .parse(process.argv);
 
 if (program.args.length) {
