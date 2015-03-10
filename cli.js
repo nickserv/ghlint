@@ -28,7 +28,7 @@ program
   .parse(process.argv);
 
 if (program.args.length) {
-  program.args.forEach(function (arg) {
+  program.args.forEach(function (arg, index) {
     // The query is the first argument of the ghlint command. The query can either represent a specific repo in the format "owner/repository", or an owner with just the name of the owner (which triggers the Linters for all of the owner's repositories).
     var query = arg.split('/');
     var owner = query[0];
@@ -41,6 +41,10 @@ if (program.args.length) {
           console.error(error.message);
         } else {
           printResults(owner, repo, linters);
+          // Print a blank line if this isn't the last repo.
+          if (index !== program.args.length - 1) {
+            console.log();
+          }
         }
       });
     } else if (owner) {
@@ -56,6 +60,10 @@ if (program.args.length) {
             }
             printResults(repoResults.owner, repoResults.name, repoResults.results);
           });
+          // Print a blank line if this isn't the last set of repos.
+          if (index !== program.args.length - 1) {
+            console.log();
+          }
         }
       });
     }
