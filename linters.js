@@ -1,3 +1,10 @@
+// Returns true if at least one file in the root directory of `contents` has a name that matches `pattern`.
+function matchingFileInRoot(contents, pattern) {
+  return contents.some(function (content) {
+    return content.type === 'file' && pattern.test(content.name);
+  });
+}
+
 // Exposes an Array of Linters, which can be accessed with `ghlint.linters`. Every Linter is an Object with a message field and a lint method.
 //
 // ## Linter Properties
@@ -53,20 +60,14 @@ module.exports = [
   {
     message: 'missing license',
     lint: function (repo, commits, contents) {
-      // At least one file in the root directory should have "license" in its name (case insensitive).
-      return Array.prototype.some.call(contents, function (content) {
-        return content.type === 'file' && /license/i.test(content.name);
-      });
+      return matchingFileInRoot(contents, /license/i);
     }
   },
 
   {
     message: 'missing readme',
     lint: function (repo, commits, contents) {
-      // At least one file in the root directory should have "readme" in its name (case insensitive).
-      return Array.prototype.some.call(contents, function (content) {
-        return content.type === 'file' && /readme/i.test(content.name);
-      });
+      return matchingFileInRoot(contents, /readme/i);
     }
   }
 ];
