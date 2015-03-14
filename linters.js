@@ -1,8 +1,15 @@
+// Returns true if at least one file in the root directory of `contents` has a name that matches `pattern`.
+function matchingFileInRoot(contents, pattern) {
+  return contents.some(function (content) {
+    return content.type === 'file' && pattern.test(content.name);
+  });
+}
+
 // Exposes an Array of Linters, which can be accessed with `ghlint.linters`. Every Linter is an Object with a message field and a lint method.
 //
 // ## Linter Properties
 // ### message (String)
-// A short description of what the Linter asserts.
+// A short description of what went wrong (assuming the linter fails).
 // ### lint (function)
 // Must be given the reponse bodies of three GitHub API endpoints for a specific repository as parameters: [/repos/:owner](https://developer.github.com/v3/repos/#get), [/repos/:owner/:repo/commits](https://developer.github.com/v3/repos/commits/), and [/repos/:owner/:repo/contents](https://developer.github.com/v3/repos/contents/). These parameters are named repo, commits, and contents in the source respectively. Returns true if the Linter passes (if the repo satisfies the Linter's description) and false if it fails.
 module.exports = [
@@ -53,20 +60,14 @@ module.exports = [
   {
     message: 'missing license',
     lint: function (repo, commits, contents) {
-      // At least one file in the root directory should have "license" in its name (case insensitive).
-      return Array.prototype.some.call(contents, function (content) {
-        return content.type === 'file' && /license/i.test(content.name);
-      });
+      return matchingFileInRoot(contents, /license/i);
     }
   },
 
   {
     message: 'missing readme',
     lint: function (repo, commits, contents) {
-      // At least one file in the root directory should have "readme" in its name (case insensitive).
-      return Array.prototype.some.call(contents, function (content) {
-        return content.type === 'file' && /readme/i.test(content.name);
-      });
+      return matchingFileInRoot(contents, /readme/i);
     }
   }
 ];
