@@ -1,3 +1,7 @@
+Deprecated
+==========
+Use [GitHub Community Profile](https://help.github.com/articles/viewing-your-community-profile/).
+
 ghlint
 ======
 [![npm version](https://badge.fury.io/js/ghlint.svg)](http://badge.fury.io/js/ghlint)
