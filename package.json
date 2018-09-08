@@ -1,7 +1,7 @@
 {
   "name": "ghlint",
   "description": "A linter for GitHub projects.",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "author": "Nicolas McCurdy <thenickperson@gmail.com>",
   "bin": {
     "ghlint": "cli.js"
